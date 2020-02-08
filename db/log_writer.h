@@ -29,7 +29,7 @@ class Writer {
   // "*dest" must remain live while this Writer is in use.
   Writer(WritableFile* dest, uint64_t dest_length);
 
-  Writer(const Writer&) = delete;
+  Writer(const Writer&) = delete;  // 显式删除(告知编译器不生成函数默认的缺省版本)
   Writer& operator=(const Writer&) = delete;
 
   ~Writer();
