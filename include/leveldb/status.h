@@ -9,6 +9,8 @@
 // external synchronization, but if any of the threads may call a
 // non-const method, all threads accessing the same Status must use
 // external synchronization.
+// 多线程可以不通过外同步来调用Status的const方法，
+// 但如果有一个线程使用了non-const的方法，那么所有的线程必须使用外同步来获取同一个Status
 
 #ifndef STORAGE_LEVELDB_INCLUDE_STATUS_H_
 #define STORAGE_LEVELDB_INCLUDE_STATUS_H_
@@ -32,7 +34,7 @@ class LEVELDB_EXPORT Status {
 
   Status(Status&& rhs) noexcept : state_(rhs.state_) { rhs.state_ = nullptr; }
   Status& operator=(Status&& rhs) noexcept;
-
+  // static 类成员函数 表示这个函数为全类所共有，而且只能访问静态成员变量
   // Return a success status.
   static Status OK() { return Status(); }
 
@@ -52,7 +54,8 @@ class LEVELDB_EXPORT Status {
   static Status IOError(const Slice& msg, const Slice& msg2 = Slice()) {
     return Status(kIOError, msg, msg2);
   }
-
+  // const的含义是这个方法不会改变类里面的成员
+  // 这是一种保证，能够帮助你在编译期发现错误
   // Returns true iff the status indicates success.
   bool ok() const { return (state_ == nullptr); }
 
